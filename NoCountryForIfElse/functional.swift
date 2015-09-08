@@ -43,6 +43,10 @@ func checkChildrenCount(count: Int) -> PersonCheck {
     return { $0.childrenCount == count }
 }
 
+func checkChildrenMinCount(count: Int) -> PersonCheck {
+    return { $0.childrenCount >= count }
+}
+
 /// jobs
 
 func checkMainJobs(jobs: [String]) -> PersonCheck {
@@ -73,18 +77,18 @@ func mustSucceed(checks: [PersonCheck]) -> PersonCheck {
 
 /// nodes
 
-struct JobsCheck {
+struct DeskNode {
     let name: String
     let nextDeskName: String?
 }
 
-typealias PersonNode = Person -> JobsCheck
+typealias PersonNode = Person -> DeskNode
 typealias JobsNode = PersonCheck -> PersonNode
 
 func node(name: String, #nextDeskName: String) -> JobsNode {
     return { check in
         return { person in
-            return JobsCheck(name: name, nextDeskName: check(person) ? nextDeskName : nil)
+            return DeskNode(name: name, nextDeskName: check(person) ? nextDeskName : nil)
         }
     }
 }

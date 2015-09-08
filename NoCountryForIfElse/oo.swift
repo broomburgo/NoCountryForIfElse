@@ -1,18 +1,18 @@
 
 /// person attributes
 
-protocol PersonCheckI {
+protocol PersonCheckType {
     func personIsValid(person: Person) -> Bool
 }
 
-class AlwaysPassCheck: PersonCheckI {
+class AlwaysPassCheck: PersonCheckType {
     
     func personIsValid(person: Person) -> Bool {
         return true
     }
 }
 
-class MinLikedJobsCountCheck: PersonCheckI {
+class MinLikedJobsCountCheck: PersonCheckType {
     
     let minCount: Int
     init(_ minCount: Int) {
@@ -24,7 +24,7 @@ class MinLikedJobsCountCheck: PersonCheckI {
     }
 }
 
-class IsYoungCheck: PersonCheckI {
+class IsYoungCheck: PersonCheckType {
     
     let isYoung: Bool
     init(_ isYoung: Bool) {
@@ -36,7 +36,7 @@ class IsYoungCheck: PersonCheckI {
     }
 }
 
-class ChildrenCountCheck: PersonCheckI {
+class ChildrenCountCheck: PersonCheckType {
     
     let childrenCount: Int
     init(_ childrenCount: Int) {
@@ -48,9 +48,21 @@ class ChildrenCountCheck: PersonCheckI {
     }
 }
 
+class ChildrenMinCountCheck: PersonCheckType {
+    
+    let childrenMinCount: Int
+    init(_ childrenMinCount: Int) {
+        self.childrenMinCount = childrenMinCount
+    }
+    
+    func personIsValid(person: Person) -> Bool {
+        return person.childrenCount >= childrenMinCount
+    }
+}
+
 /// jobs
 
-class JobsI {
+class JobsType {
     
     let availableJobs: [String]
     
@@ -59,28 +71,28 @@ class JobsI {
     }
 }
 
-class MainJobsCheck: JobsI, PersonCheckI {
+class MainJobsCheck: JobsType, PersonCheckType {
     
     func personIsValid(person: Person) -> Bool {
         return matching(availableJobs, person.likedJobsMain)
     }
 }
 
-class SecondaryJobsCheck: JobsI, PersonCheckI {
+class SecondaryJobsCheck: JobsType, PersonCheckType {
     
     func personIsValid(person: Person) -> Bool {
         return matching(availableJobs, person.likedJobsSecondary)
     }
 }
 
-class ExtendedJobsCheck: JobsI, PersonCheckI {
+class ExtendedJobsCheck: JobsType, PersonCheckType {
     
     func personIsValid(person: Person) -> Bool {
         return matching(availableJobs, person.likedJobsMain + person.likedJobsSecondary)
     }
 }
 
-class AllJobsCheck: JobsI, PersonCheckI {
+class AllJobsCheck: JobsType, PersonCheckType {
     
     func personIsValid(person: Person) -> Bool {
         return availableJobs.filter({ contains(person.unlikedJobs, $0) == false }).count > 0
@@ -89,11 +101,11 @@ class AllJobsCheck: JobsI, PersonCheckI {
 
 /// composition
 
-class FailingCheck: PersonCheckI {
+class FailingCheck: PersonCheckType {
     
-    let check: PersonCheckI
+    let check: PersonCheckType
     
-    init(_ check: PersonCheckI) {
+    init(_ check: PersonCheckType) {
         self.check = check
     }
     
@@ -102,11 +114,11 @@ class FailingCheck: PersonCheckI {
     }
 }
 
-class MultipleCheck: PersonCheckI {
+class MultipleCheck: PersonCheckType {
     
-    let checks: [PersonCheckI]
+    let checks: [PersonCheckType]
     
-    init(_ checks: [PersonCheckI]) {
+    init(_ checks: [PersonCheckType]) {
         self.checks = checks
     }
 
@@ -115,15 +127,15 @@ class MultipleCheck: PersonCheckI {
     }
 }
 
-class ComposedCheck: PersonCheckI {
+class ComposedCheck: PersonCheckType {
     
-    let basic: PersonCheckI
+    let basic: PersonCheckType
     
-    init(_ basic: PersonCheckI) {
+    init(_ basic: PersonCheckType) {
         self.basic = basic
     }
     
-    func composeWith(check: PersonCheckI) -> ComposedCheck {
+    func composeWith(check: PersonCheckType) -> ComposedCheck {
         return ComposedCheck(MultipleCheck([basic,check]))
     }
     
@@ -134,17 +146,17 @@ class ComposedCheck: PersonCheckI {
 
 /// desk name retrieval
 
-protocol NextDeskNameI {
+protocol NextDeskType {
     func nextDeskNameForPerson(person: Person) -> String?
 }
 
-class CheckNode: NextDeskNameI {
+class CheckNode: NextDeskType {
     
     let name: String
     let nextDeskName: String
-    let check: PersonCheckI
+    let check: PersonCheckType
     
-    init(name: String, nextDeskName: String, check: PersonCheckI) {
+    init(name: String, nextDeskName: String, check: PersonCheckType) {
         self.name = name
         self.nextDeskName = nextDeskName
         self.check = check
@@ -155,7 +167,7 @@ class CheckNode: NextDeskNameI {
     }
 }
 
-class CheckStructure: NextDeskNameI {
+class CheckStructure: NextDeskType {
     
     let nodes: [CheckNode]
     init(_ nodes: [CheckNode]) {

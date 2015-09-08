@@ -33,7 +33,7 @@ let desk = DeskWithJobs(
 
 /// definitions for OO
 
-let checkThreeOrMoreChildren = ChildrenCountCheck(3)
+let checkThreeOrMoreChildren = ChildrenMinCountCheck(3)
 let checkTwoChildren = ChildrenCountCheck(2)
 let checkOneChild = ChildrenCountCheck(1)
 let checkOld = IsYoungCheck(false)
@@ -62,6 +62,7 @@ let structure = CheckStructure([
         name: "1 child",
         nextDeskName: "d4",
         check: ComposedCheck(checkOneChild)
+//            .composeWith(FailingCheck(checkOld))
             .composeWith(ExtendedJobsCheck(availableJobsOneChild))
     ),
     CheckNode(
@@ -71,6 +72,12 @@ let structure = CheckStructure([
             .composeWith(checkFailingChildrenAll)
             .composeWith(ExtendedJobsCheck(availableJobsElderly))
     ),
+//    CheckNode(
+//        name: "1 child old",
+//        nextDeskName: "d6",
+//        check: ComposedCheck(MultipleCheck([checkOneChild,checkOld]))
+//            .composeWith(ExtendedJobsCheck(availableJobsElderly + availableJobsOneChild))
+//    ),
     CheckNode(
         name: "main",
         nextDeskName: "d2",
@@ -102,7 +109,7 @@ let structure = CheckStructure([
 
 /// definitions for functional
 
-let threeOrMoreChildrenCheck = checkChildrenCount(3)
+let threeOrMoreChildrenCheck = checkChildrenMinCount(3)
 let twoChildrenCheck = checkChildrenCount(2)
 let oneChildCheck = checkChildrenCount(1)
 let oldCheck = checkYoung(false)
@@ -121,11 +128,18 @@ let nodes: [PersonNode] = [
     
     node("1 child", nextDeskName: "d4")
         <*> oneChildCheck
+//        <&> mustFail([oldCheck])
         <&> checkExtendedJobs(availableJobsOneChild),
     
     node("old", nextDeskName: "d3")
-        <*> oldCheck <&> mustFail(childrenChecks)
+        <*> oldCheck
+        <&> mustFail(childrenChecks)
         <&> checkExtendedJobs(availableJobsElderly),
+    
+//    node("1 child old", nextDeskName: "d6")
+//        <*> oldCheck
+//        <&> oneChildCheck
+//        <&> checkExtendedJobs(availableJobsOneChild + availableJobsElderly),
     
     node("main", nextDeskName: "d2")
         <*> mainCheck
@@ -147,9 +161,9 @@ quickCheck_oo(structure, iterations: 10000, verbose: false)
 quickCheck_functional(nodes, iterations: 10000, verbose: false)
 
 println()
-println("COMPLEX\n")
+println("PROCEDURAL\n")
 println("\(p1.name) is at desk d1")
-let placeName_complex = placeNameForPerson_complex(p1, desk: desk)
+let placeName_complex = placeNameForPerson_procedural(p1, desk: desk)
 println("\(p1.name) is \(placeName_complex)")
 
 println("\n------------\n")
@@ -178,7 +192,7 @@ func quickCheck_consistency(desk: DeskWithJobs, structure: CheckStructure, nodes
             println("testing person:")
             printPersonData(person)
         }
-        let placeNameForComplex = placeNameForPerson_complex(person, desk: desk)
+        let placeNameForComplex = placeNameForPerson_procedural(person, desk: desk)
         let placeNameForOO = placeNameForPerson_oo(person, structure: structure)
         let placeNameForFunctional = placeNameForPerson_functional(person, nodes: nodes)
         if placeNameForComplex != placeNameForOO {
