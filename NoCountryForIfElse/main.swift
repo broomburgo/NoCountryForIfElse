@@ -7,7 +7,7 @@ let p1 = Person(
     childrenCount: 0,
     likedJobsMain: [],
     likedJobsSecondary: [],
-    unlikedJobs: []
+    dislikedJobs: []
 )
 
 let availableJobs = [kProgrammer,kJanitor,kManager]

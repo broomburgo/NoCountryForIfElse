@@ -8,7 +8,7 @@ struct Person {
     let childrenCount: Int
     let likedJobsMain: [String]
     let likedJobsSecondary: [String]
-    let unlikedJobs: [String]
+    let dislikedJobs: [String]
 }
 
 func printPersonData(person: Person) {
@@ -16,7 +16,7 @@ func printPersonData(person: Person) {
     println("childrenCount: \(person.childrenCount)")
     println("likedJobsMain: \(person.likedJobsMain)")
     println("likedJobsSecondary: \(person.likedJobsSecondary)")
-    println("unlikedJobs: \(person.unlikedJobs)")
+    println("dislikedJobs: \(person.dislikedJobs)")
 }
 
 let kProgrammer = "programmer"
@@ -46,7 +46,7 @@ func randomPerson() -> Person {
     
     let likedJobsMain = allJobs.filter { _ in randomBool() }
     let likedJobsSecondary = allJobs.filter { contains(likedJobsMain, $0) == false && randomBool() }
-    let unlikedJobs = allJobs.filter { contains(likedJobsMain, $0) == false && contains(likedJobsSecondary, $0) == false && randomBool() }
+    let dislikedJobs = allJobs.filter { contains(likedJobsMain, $0) == false && contains(likedJobsSecondary, $0) == false && randomBool() }
     
     return Person(
         name: "random",
@@ -54,6 +54,6 @@ func randomPerson() -> Person {
         childrenCount: randomIntBetween(1, and: 3),
         likedJobsMain: likedJobsMain,
         likedJobsSecondary: likedJobsSecondary,
-        unlikedJobs: unlikedJobs
+        dislikedJobs: dislikedJobs
     )
 }

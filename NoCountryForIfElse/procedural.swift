@@ -74,7 +74,7 @@ func placeNameForPerson_procedural(person: Person, #desk: DeskWithJobs) -> Strin
             }
             var l2 = getStringsFromList(desk.availableJobs, l1)
             if l2.count == 0 {
-                if desk.availableJobs.filter({ contains(person.unlikedJobs, $0) == false }).count > 0 {
+                if desk.availableJobs.filter({ contains(person.dislikedJobs, $0) == false }).count > 0 {
                     return person.goToPlace(Desk(name: "d2"))
                 }
                 else {
@@ -86,7 +86,7 @@ func placeNameForPerson_procedural(person: Person, #desk: DeskWithJobs) -> Strin
                     return person.goToPlace(Desk(name: "d2"))
                 }
                 else {
-                    if desk.availableJobs.filter({ contains(person.unlikedJobs, $0) == false }).count > 0 {
+                    if desk.availableJobs.filter({ contains(person.dislikedJobs, $0) == false }).count > 0 {
                         return person.goToPlace(Desk(name: "d2"))
                     }
                     else {

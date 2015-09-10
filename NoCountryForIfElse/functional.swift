@@ -62,7 +62,7 @@ func checkExtendedJobs(jobs: [String]) -> PersonCheck {
 }
 
 func checkAllJobs(jobs: [String]) -> PersonCheck {
-    return { person in jobs.filter({ contains(person.unlikedJobs, $0) == false }).count > 0 }
+    return { person in jobs.filter({ contains(person.dislikedJobs, $0) == false }).count > 0 }
 }
 
 /// composite

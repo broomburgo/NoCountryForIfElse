@@ -95,7 +95,7 @@ class ExtendedJobsCheck: JobsType, PersonCheckType {
 class AllJobsCheck: JobsType, PersonCheckType {
     
     func personIsValid(person: Person) -> Bool {
-        return availableJobs.filter({ contains(person.unlikedJobs, $0) == false }).count > 0
+        return availableJobs.filter({ contains(person.dislikedJobs, $0) == false }).count > 0
     }
 }
 
