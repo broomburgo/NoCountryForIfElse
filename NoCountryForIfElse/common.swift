@@ -57,3 +57,9 @@ func randomPerson() -> Person {
         dislikedJobs: dislikedJobs
     )
 }
+
+extension Optional {
+    func valueDefaultedTo(@autoclosure defaultValue: () -> T) -> T {
+        return self ?? defaultValue()
+    }
+}

@@ -209,4 +209,4 @@ func quickCheck_consistency(desk: DeskWithJobs, structure: CheckStructure, nodes
         }
     }
 }
-quickCheck_consistency(desk, structure, nodes, iterations: 10000, verbose: false)
+//quickCheck_consistency(desk, structure, nodes, iterations: 10000, verbose: false)

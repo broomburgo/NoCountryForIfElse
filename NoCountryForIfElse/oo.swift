@@ -180,13 +180,29 @@ class CheckStructure: NextDeskType {
         }
     }
     
-    func validNodesNamesforPerson(person: Person) -> [String] {
-        return nodes.reduce([String]()) { accumulator, node in
-            var m_accumulator = accumulator
-            if let nextDeskName = node.nextDeskNameForPerson(person) {
-                m_accumulator.append(node.name)
+    func quickCheck(#iterations: Int, verbose: Bool) {
+        if verbose {
+            println("\nQuickCheck: OO")
+        }
+        for _ in (1...iterations) {
+            let person = randomPerson()
+            if verbose {
+                println("\ntesting person:")
+                printPersonData(person)
             }
-            return m_accumulator
+            let passingNodes = nodes.reduce([String]()) { accumulator, node in
+                var m_accumulator = accumulator
+                if let nextDeskName = node.nextDeskNameForPerson(person) {
+                    m_accumulator.append(node.name)
+                }
+                return m_accumulator
+            }
+            if passingNodes.count > 1 {
+                fatalError("ambiguous nodes: \(passingNodes)")
+            }
+            else if verbose {
+                println("\ntesting PASSED")
+            }
         }
     }
 }
@@ -194,32 +210,16 @@ class CheckStructure: NextDeskType {
 /// main function
 
 func placeNameForPerson_oo(person: Person, #structure: CheckStructure) -> String {
-    if let deskName = structure.nextDeskNameForPerson(person) {
-        return "at desk \(deskName)"
-    }
-    else {
-        return "outside"
-    }
+    return structure
+        .nextDeskNameForPerson(person)
+        .map { "at desk \($0)" }
+        .valueDefaultedTo("outside")
 }
 
 /// check
 
 func quickCheck_oo(structure: CheckStructure, #iterations: Int, #verbose: Bool) {
-    for _ in (1...iterations) {
-        let person = randomPerson()
-        if verbose {
-            println()
-            println("testing person:")
-            printPersonData(person)
-        }
-        let passingNodes = structure.validNodesNamesforPerson(person)
-        if passingNodes.count > 1 {
-            fatalError("ambiguous nodes: \(passingNodes)")
-        }
-        else if verbose {
-            println("testing PASSED")
-        }
-    }
+    structure.quickCheck(iterations: iterations, verbose: verbose)
 }
 
 

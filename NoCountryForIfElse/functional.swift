@@ -96,22 +96,22 @@ func node(name: String, #nextDeskName: String) -> JobsNode {
 /// main function
 
 func placeNameForPerson_functional(person: Person, #nodes: [PersonNode]) -> String {
-    if let deskName = nodes.reduce(String?(), combine: { $0 ?? $1(person).nextDeskName }) {
-        return "at desk \(deskName)"
-    }
-    else {
-        return "outside"
-    }
+    return nodes
+        .reduce(String?()) { $0 ?? $1(person).nextDeskName }
+        .map { "at desk \($0)" }
+        .valueDefaultedTo("outside")
 }
 
 /// check
 
 func quickCheck_functional(nodes: [PersonNode], #iterations: Int, #verbose: Bool) {
+    if verbose {
+        println("\nQuickCheck: functional")
+    }
     for _ in (1...iterations) {
         let person = randomPerson()
         if verbose {
-            println()
-            println("testing person:")
+            println("\ntesting person:")
             printPersonData(person)
         }
         let passingNodes = nodes.reduce([String]()) { currentNodeNames, node in
@@ -128,7 +128,7 @@ func quickCheck_functional(nodes: [PersonNode], #iterations: Int, #verbose: Bool
             fatalError("ambiguous nodes: \(passingNodes)")
         }
         else if verbose {
-            println("testing PASSED")
+            println("\ntesting PASSED")
         }
     }
 }
