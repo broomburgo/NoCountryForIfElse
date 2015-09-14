@@ -62,7 +62,7 @@ func getStringsFromList(list: [String], optionalPreferences: [String]?) -> [Stri
 
 /// main function
 
-func placeNameForPerson_procedural(person: Person, #desk: DeskWithJobs) -> String {
+func placeNameForPerson_structured(person: Person, #desk: DeskWithJobs) -> String {
     
     let outside = Outside()
         

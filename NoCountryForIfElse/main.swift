@@ -18,7 +18,7 @@ let minJobsListSize = 1
 
 ////////////
 
-/// definitions for procedural
+/// definitions for structured
 
 let desk = DeskWithJobs(
     desk: Desk(name: "d1"),
@@ -161,17 +161,10 @@ quickCheck_oo(structure, iterations: 10000, verbose: false)
 quickCheck_functional(nodes, iterations: 10000, verbose: false)
 
 println()
-println("PROCEDURAL\n")
+println("STRUCTURED\n")
 println("\(p1.name) is at desk d1")
-let placeName_complex = placeNameForPerson_procedural(p1, desk: desk)
+let placeName_complex = placeNameForPerson_structured(p1, desk: desk)
 println("\(p1.name) is \(placeName_complex)")
-
-println("\n------------\n")
-
-println("FUNCTIONAL\n")
-println("\(p1.name) is at desk d1")
-let placeName_functional = placeNameForPerson_functional(p1, nodes: nodes)
-println("\(p1.name) is \(placeName_functional)")
 
 println("\n------------\n")
 
@@ -179,6 +172,13 @@ println("OO\n")
 println("\(p1.name) is at desk d1")
 let placeName_oo = placeNameForPerson_oo(p1, structure:structure)
 println("\(p1.name) is \(placeName_oo)")
+
+println("\n------------\n")
+
+println("FUNCTIONAL\n")
+println("\(p1.name) is at desk d1")
+let placeName_functional = placeNameForPerson_functional(p1, nodes: nodes)
+println("\(p1.name) is \(placeName_functional)")
 
 ////////////
 
@@ -192,7 +192,7 @@ func quickCheck_consistency(desk: DeskWithJobs, structure: CheckStructure, nodes
             println("testing person:")
             printPersonData(person)
         }
-        let placeNameForComplex = placeNameForPerson_procedural(person, desk: desk)
+        let placeNameForComplex = placeNameForPerson_structured(person, desk: desk)
         let placeNameForOO = placeNameForPerson_oo(person, structure: structure)
         let placeNameForFunctional = placeNameForPerson_functional(person, nodes: nodes)
         if placeNameForComplex != placeNameForOO {
